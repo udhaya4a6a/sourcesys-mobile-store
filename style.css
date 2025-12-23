@@ -377,6 +377,7 @@ footer {
   position: relative;
 }
 
+
 .wishlist {
   position: absolute;
   bottom: 15px;
@@ -400,6 +401,79 @@ footer {
   50% { transform: scale(1.4); }
   100% { transform: scale(1); }
 }
+
+/* ===== PRODUCT ACTION BUTTONS ===== */
+.card button {
+  position: relative;
+  overflow: hidden;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+/* ADD TO CART BUTTON */
+.card button:first-child {
+  background: linear-gradient(135deg, #00e6ff, #00b3cc);
+  color: #020617;
+  box-shadow: 0 6px 16px rgba(0,230,255,0.25);
+}
+
+.card button:first-child:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 12px 28px rgba(0,230,255,0.45);
+}
+
+.card button:first-child:active {
+  transform: scale(0.95);
+}
+
+/* Pulse animation after add */
+.card button.added {
+  animation: cartPulse 0.5s ease;
+}
+
+@keyframes cartPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+/* VIEW DETAILS BUTTON */
+.card .details-btn {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255,255,255,0.35);
+  margin-left: 8px;
+}
+
+/* Border sweep effect */
+.card .details-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.35),
+    transparent
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.card .details-btn:hover::before {
+  transform: translateX(100%);
+}
+
+.card .details-btn:hover {
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.15);
+}
+
 
 /* Big Brand Footer Section */
 .brand-footer {
@@ -523,6 +597,10 @@ footer {
 .cart-page {
   padding: 40px;
   min-height: 80vh;
+}
+.cart:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 30px rgba(0,230,255,0.4);
 }
 
 .cart-page h2 {

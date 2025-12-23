@@ -61,14 +61,21 @@ function renderProducts(list) {
 renderProducts(products);
 
 // ================= ADD TO CART =================
-function addToCart(id) {
+function addToCart(id, btn) {
   const product = products.find(p => p.id === id);
   if (!product) return;
 
   cart.push(product);
   localStorage.setItem("cart", JSON.stringify(cart));
   updateCartCount();
+
+  // Success animation
+  if (btn) {
+    btn.classList.add("added");
+    setTimeout(() => btn.classList.remove("added"), 500);
+  }
 }
+
 
 // ================= SEARCH =================
 const searchInput = document.getElementById("search");
