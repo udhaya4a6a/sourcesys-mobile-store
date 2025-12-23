@@ -1,16 +1,4 @@
-sourcesys-mobile-store/
-│
-├── index.html
-├── login.html
-├── signup.html
-├── cart.html
-│
-├── style.css
-├── script.js
-│
-└── images/
-├── hero-image.png
-├── product-images...
+
 
 # 📱 SourceSys Mobile Store
 
@@ -86,4 +74,18 @@ Responsiveness is achieved using **CSS Grid, Flexbox, and media queries**.
 ---
 
 ## 📂 Project Structure
+
+sourcesys-mobile-store/
+│
+├── index.html
+├── login.html
+├── signup.html
+├── cart.html
+│
+├── style.css
+├── script.js
+│
+└── images/
+├── hero-image.png
+├── product-images...
 
