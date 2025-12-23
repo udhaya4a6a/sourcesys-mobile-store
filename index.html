@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SourceSys Mobiles</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Preloader -->
+<div id="preloader"></div>
+
+<!-- Navbar -->
+<header class="navbar">
+  <h1>SourceSys <span>Mobiles</span></h1>
+  <nav>
+    <input type="text" id="search" placeholder="Search mobiles...">
+    <a href="login.html">Login</a>
+    <a href="signup.html">Signup</a>
+    <div class="cart">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <span id="cart-count">0</span>
+    </div>
+  </nav>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-bg"></div>
+
+  <div class="hero-content">
+    <h2 class="hero-title">Your Trusted Mobile Store</h2>
+    <p class="hero-subtitle">SourceSys Mobiles</p>
+
+    <div class="hero-actions">
+      <button class="primary-btn" onclick="goToShop()">Shop Now</button>
+      <button class="secondary-btn" onclick="openDetails(products[0])">View Deals</button>
+
+    </div>
+  </div>
+
+  <!-- Product Details Modal -->
+<div class="details-modal" id="detailsModal">
+  <div class="details-content">
+    <span class="close-btn" onclick="closeDetails()">×</span>
+    <img id="detailsImg">
+    <h2 id="detailsName"></h2>
+    <p id="detailsPrice"></p>
+    <p class="details-desc">
+      High-performance smartphone with premium design, powerful processor,
+      advanced camera system, and long-lasting battery.
+    </p>
+    <button class="primary-btn">Add to Cart</button>
+  </div>
+</div>
+
+
+  <!-- Floating Glow Shapes -->
+  <span class="glow glow-1"></span>
+  <span class="glow glow-2"></span>
+</section>
+
+
+<!-- Products -->
+<section class="products" id="products">
+</section>
+
+
+<!-- Cart Modal -->
+<a href="cart.html" class="cart">
+  <i class="fa-solid fa-cart-shopping"></i>
+  <span id="cart-count">0</span>
+</a>
+
+
+
+
+<!-- Big Brand Footer Section -->
+<section class="brand-footer">
+  <h1>SOURCESYS</h1>
+</section>
+
+<!-- Footer Links -->
+<footer class="main-footer">
+  <div class="footer-left">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Use</a>
+  </div>
+
+  <div class="footer-right">
+    <p>© 2025 SourceSys. All rights reserved.</p>
+  </div>
+</footer>
+
+
+<script src="script.js"></script>
+</body>
+</html>
