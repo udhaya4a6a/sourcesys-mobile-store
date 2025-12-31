@@ -2,6 +2,16 @@
 
 A full-stack e-commerce mobile store with user authentication, payment integration, and PDF invoice generation.
 
+## 🌐 Live Demo
+
+🔗 **Website:**  
+https://udhaya4a6a.github.io/sourcesys-mobile-store/
+
+🔗 **GitHub Repository:**  
+https://github.com/udhaya4a6a/sourcesys-mobile-store.git
+
+---
+
 ## Features
 
 - ✅ User Registration & Login with database storage
@@ -10,6 +20,10 @@ A full-stack e-commerce mobile store with user authentication, payment integrati
 - ✅ PDF Invoice/Receipt Download
 - ✅ Order Management
 - ✅ Responsive Design
+- 🛍️ Modern product listing with animated cards
+- 🔍 Real-time smart search (filters products as you type)
+- 👀 Product Details modal
+- 🎨 Smooth animations & micro-interactions
 
 ## Tech Stack
 
@@ -91,6 +105,7 @@ sourcesys_Demo/
 ### Payments
 - `POST /api/create-order` - Create Razorpay order
 - `POST /api/verify-payment` - Verify payment and save order
+- `GET /api/razorpay-key` - Get Razorpay key ID (for frontend)
 
 ### Orders
 - `GET /api/orders/:userId` - Get user orders
@@ -132,6 +147,15 @@ sourcesys_Demo/
 - **Security**: User authentication is validated on the server for all payment operations
 - **Database**: The database file (`database.db`) is created automatically on first run
 - **Error Handling**: All endpoints now have proper error handling and validation
+
+## 📱 Responsive Design
+
+The website is optimized for:
+- 📱 Mobile phones
+- 💻 Tablets
+- 🖥️ Desktop screens
+
+Responsiveness is achieved using **CSS Grid, Flexbox, and media queries**.
 
 ## Troubleshooting
 
