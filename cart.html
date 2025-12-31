@@ -15,6 +15,9 @@
   <nav>
     <a href="index.html">Home</a>
     <a href="login.html">Login</a>
+    <a href="#" class="primary-btn" id="checkout-nav-link">
+      Proceed to Checkout
+    </a>
   </nav>
 </header>
 
@@ -25,10 +28,41 @@
 
   <div class="cart-summary">
     <h3>Total: ₹<span id="cart-total">0</span></h3>
-    <button class="primary-btn">Proceed to Checkout</button>
+    <button class="primary-btn" onclick="proceedToCheckout()">Proceed to Checkout</button>
   </div>
 </section>
 
 <script src="script.js"></script>
+<script>
+function proceedToCheckout() {
+  const user = JSON.parse(localStorage.getItem('loggedInUser'));
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  if (!user) {
+    alert('Please login first');
+    window.location.href = 'login.html';
+    return false;
+  }
+
+  if (cart.length === 0) {
+    alert('Your cart is empty');
+    return false;
+  }
+
+  window.location.href = 'checkout.html';
+  return false;
+}
+
+// Attach event listener to navbar checkout link
+document.addEventListener('DOMContentLoaded', () => {
+  const checkoutNavLink = document.getElementById('checkout-nav-link');
+  if (checkoutNavLink) {
+    checkoutNavLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      proceedToCheckout();
+    });
+  }
+});
+</script>
 </body>
 </html>

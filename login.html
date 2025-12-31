@@ -24,13 +24,79 @@
     <input type="password" placeholder="Password" required>
   </div>
 
-  <button class="primary-btn auth-btn">Login</button>
+  <button class="primary-btn auth-btn" onclick="handleLogin()">Login</button>
 
   <p class="auth-footer">
-    Don’t have an account?
+    Don't have an account?
     <a href="signup.html">Sign up</a>
   </p>
+
+  <div id="error-message" style="color: #ef4444; margin-top: 10px; display: none;"></div>
+  <div id="success-message" style="color: #22c55e; margin-top: 10px; display: none;"></div>
 </div>
+
+<script>
+const API_URL = 'http://localhost:3000/api';
+
+async function handleLogin() {
+  const inputs = document.querySelectorAll('.input-group input');
+  const email = inputs[0].value.trim();
+  const password = inputs[1].value;
+
+  const errorDiv = document.getElementById("error-message");
+  const successDiv = document.getElementById("success-message");
+
+  // Hide previous messages
+  errorDiv.style.display = 'none';
+  successDiv.style.display = 'none';
+
+  if (!email || !password) {
+    errorDiv.textContent = "Email and password are required";
+    errorDiv.style.display = 'block';
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      successDiv.textContent = "Login successful! Redirecting...";
+      successDiv.style.display = 'block';
+      
+      // Store user in localStorage
+      localStorage.setItem('loggedInUser', JSON.stringify(data.user));
+      
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1500);
+    } else {
+      errorDiv.textContent = data.error || "Login failed";
+      errorDiv.style.display = 'block';
+    }
+  } catch (error) {
+    errorDiv.textContent = "Connection error. Please make sure the server is running.";
+    errorDiv.style.display = 'block';
+    console.error('Login error:', error);
+  }
+}
+
+// Allow Enter key to submit
+document.querySelectorAll('.input-group input').forEach(input => {
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      handleLogin();
+    }
+  });
+});
+</script>
 
 </body>
 </html>

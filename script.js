@@ -48,7 +48,7 @@ function renderProducts(list) {
         <h3>${p.name}</h3>
         <p>₹${p.price}</p>
 
-        <button onclick="addToCart(${p.id})">Add to Cart</button>
+        <button onclick="addToCart(${p.id}, this)">Add to Cart</button>
         <button class="details-btn"
           onclick="openDetails(${JSON.stringify(p).replace(/"/g,'&quot;')})">
           View Details
@@ -153,3 +153,4 @@ function removeFromCart(index) {
 
 // Auto load when cart.html opens
 renderCartPage();
+

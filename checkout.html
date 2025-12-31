@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Checkout | SourceSys Mobiles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Razorpay Checkout Script -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body class="cart-page">
+
+<header class="navbar">
+  <h1>SourceSys <span>Mobiles</span></h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="cart.html">Cart</a>
+  </nav>
+</header>
+
+<section class="checkout-section">
+  <h2>Checkout</h2>
+
+  <div class="checkout-container">
+    <div class="order-summary">
+      <h3>Order Summary</h3>
+      <div id="checkout-items"></div>
+      <div class="order-total">
+        <strong>Total: ₹<span id="checkout-total">0</span></strong>
+      </div>
+    </div>
+
+    <div class="payment-section">
+      <h3>Payment Details</h3>
+      <div id="user-info"></div>
+      <button class="primary-btn" id="pay-button" onclick="initiatePayment()">
+        Pay Now
+      </button>
+      <div id="payment-status" style="margin-top: 15px;"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+const API_URL = 'http://localhost:3000/api';
+
+// Razorpay Key ID will be fetched from server
+let RAZORPAY_KEY_ID = null;
+let orderData = null;
+
+// Fetch Razorpay Key ID from server on page load
+async function loadRazorpayKey() {
+  try {
+    const response = await fetch(`${API_URL}/razorpay-key`);
+    const data = await response.json();
+    if (data.keyId) {
+      RAZORPAY_KEY_ID = data.keyId;
+    } else {
+      throw new Error('Razorpay key not available');
+    }
+  } catch (error) {
+    console.error('Failed to load Razorpay key:', error);
+    alert('Payment system configuration error. Please contact support.');
+  }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  // Load Razorpay key first
+  await loadRazorpayKey();
+
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  if (!user) {
+    alert("Please login first");
+    window.location.href = "login.html";
+    return;
+  }
+
+  if (cart.length === 0) {
+    alert("Cart is empty");
+    window.location.href = "cart.html";
+    return;
+  }
+
+  if (!RAZORPAY_KEY_ID) {
+    alert("Payment system not configured. Please contact support.");
+    return;
+  }
+
+  // Display user info
+  document.getElementById('user-info').innerHTML = `
+    <p><strong>Name:</strong> ${user.name}</p>
+    <p><strong>Email:</strong> ${user.email}</p>
+    <p><strong>Phone:</strong> ${user.phone}</p>
+  `;
+
+  // Display cart items
+  const checkoutItems = document.getElementById('checkout-items');
+  let total = 0;
+
+  checkoutItems.innerHTML = '';
+  cart.forEach(item => {
+    total += item.price;
+    checkoutItems.innerHTML += `
+      <div class="checkout-item">
+        <span>${item.name}</span>
+        <span>₹${item.price}</span>
+      </div>
+    `;
+  });
+
+  document.getElementById('checkout-total').textContent = total;
+  orderData = { user, cart, total };
+});
+
+async function initiatePayment() {
+  const { user, cart, total } = orderData;
+  const payButton = document.getElementById('pay-button');
+  const statusDiv = document.getElementById('payment-status');
+
+  payButton.disabled = true;
+  payButton.textContent = 'Processing...';
+  statusDiv.innerHTML = '<p style="color: #3b82f6;">Creating payment order...</p>';
+
+  try {
+    // Create order on server
+    const response = await fetch(`${API_URL}/create-order`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ amount: total, currency: 'INR' })
+    });
+
+    const orderResponse = await response.json();
+
+    if (!response.ok) {
+      throw new Error(orderResponse.error || 'Failed to create order');
+    }
+
+    // Initialize Razorpay checkout
+    const options = {
+      key: RAZORPAY_KEY_ID,
+      amount: orderResponse.amount,
+      currency: orderResponse.currency,
+      name: 'SourceSys Mobiles',
+      description: 'Mobile Purchase',
+      order_id: orderResponse.orderId,
+      handler: async function(response) {
+        // Payment successful
+        statusDiv.innerHTML = '<p style="color: #22c55e;">Verifying payment...</p>';
+
+        try {
+          // Verify payment on server
+          const verifyResponse = await fetch(`${API_URL}/verify-payment`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              orderId: orderResponse.orderId,
+              paymentId: response.razorpay_payment_id,
+              signature: response.razorpay_signature,
+              userId: user.id,
+              userEmail: user.email, // Include email for authentication
+              items: cart,
+              totalAmount: total
+            })
+          });
+
+          const verifyData = await verifyResponse.json();
+
+          if (verifyResponse.ok) {
+            // Store order info for invoice
+            localStorage.setItem('lastOrder', JSON.stringify({
+              orderId: verifyData.orderId,
+              paymentId: response.razorpay_payment_id,
+              items: cart,
+              total: total,
+              date: new Date().toLocaleString()
+            }));
+
+            // Clear cart
+            localStorage.removeItem('cart');
+
+            // Redirect to success page
+            window.location.href = 'success.html';
+          } else {
+            throw new Error(verifyData.error || 'Payment verification failed');
+          }
+        } catch (error) {
+          statusDiv.innerHTML = `<p style="color: #ef4444;">Error: ${error.message}</p>`;
+          payButton.disabled = false;
+          payButton.textContent = 'Pay Now';
+        }
+      },
+      prefill: {
+        name: user.name,
+        email: user.email,
+        contact: user.phone
+      },
+      theme: {
+        color: '#3b82f6'
+      },
+      modal: {
+        ondismiss: function() {
+          payButton.disabled = false;
+          payButton.textContent = 'Pay Now';
+          statusDiv.innerHTML = '';
+        }
+      }
+    };
+
+    const razorpay = new Razorpay(options);
+    razorpay.open();
+
+  } catch (error) {
+    statusDiv.innerHTML = `<p style="color: #ef4444;">Error: ${error.message}</p>`;
+    payButton.disabled = false;
+    payButton.textContent = 'Pay Now';
+    console.error('Payment error:', error);
+  }
+}
+</script>
+
+</body>
+</html>

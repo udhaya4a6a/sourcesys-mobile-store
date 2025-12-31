@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Success | SourceSys Mobiles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="cart-page">
+
+<header class="navbar">
+  <h1>SourceSys <span>Mobiles</span></h1>
+  <nav>
+    <a href="index.html">Home</a>
+  </nav>
+</header>
+
+<section class="success-section">
+  <div class="success-content">
+    <div class="success-icon">
+      <i class="fa-solid fa-circle-check"></i>
+    </div>
+    <h2>🎉 Payment Successful!</h2>
+    <p>Your order has been placed successfully.</p>
+    
+    <div id="order-details" style="margin: 20px 0; padding: 20px; background: #f3f4f6; border-radius: 8px; text-align: left; max-width: 400px;">
+      <p><strong>Order ID:</strong> <span id="order-id"></span></p>
+      <p><strong>Payment ID:</strong> <span id="payment-id"></span></p>
+      <p><strong>Total Amount:</strong> ₹<span id="total-amount"></span></p>
+      <p><strong>Date:</strong> <span id="order-date"></span></p>
+    </div>
+
+    <div class="success-actions">
+      <button class="primary-btn" onclick="downloadInvoice()">
+        <i class="fa-solid fa-download"></i> Download Invoice (PDF)
+      </button>
+      <a href="index.html" class="secondary-btn" style="text-decoration: none; display: inline-block; margin-left: 10px;">
+        Continue Shopping
+      </a>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="invoice.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const orderData = JSON.parse(localStorage.getItem('lastOrder'));
+  
+  if (orderData) {
+    document.getElementById('order-id').textContent = orderData.orderId;
+    document.getElementById('payment-id').textContent = orderData.paymentId.substring(0, 20) + '...';
+    document.getElementById('total-amount').textContent = orderData.total.toLocaleString('en-IN');
+    document.getElementById('order-date').textContent = orderData.date;
+  } else {
+    // If no order data, redirect to home
+    window.location.href = 'index.html';
+  }
+});
+</script>
+
+</body>
+</html>
