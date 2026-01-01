@@ -6,7 +6,6 @@ A full-stack e-commerce mobile store with user authentication, payment integrati
 
 🔗 **Website:**  
 https://udhaya4a6a.github.io/sourcesys-mobile-store/
-
 🔗 **GitHub Repository:**  
 https://github.com/udhaya4a6a/sourcesys-mobile-store.git
 
